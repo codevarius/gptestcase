@@ -101,7 +101,7 @@ public class Parser {
         "\nProcess finished in " + (finishTime - startTime) / 60000 + " minutes");
     }
 
-    public void parseThrough(String postId){
+    public void parseThrough(String postId, String parent, String parentHref){
         /*
         Method to parse articles recursively while graph size <= ARTICLE_LIMIT_COUNT
         Not in use...
@@ -116,12 +116,19 @@ public class Parser {
                 article.setArticleLink(SOURCE + postId);
                 article.setArticleName(document.getElementsByClass("post__title-text").text());
 
+                if (parent != ""){
+                    String parentFalseName = "!fat! " + parent + "* hash: " + parent.hashCode() + " link: ";
+                    article.parentArticles.put(parentFalseName.hashCode(),"!fat! "
+                            + parent + "* hash: " + parent.hashCode() + " link: " + parentHref);
+                }
+
                 if (Main.entranceArticleName == null)
                     Main.entranceArticleName = article.getArticleName();
 
                 article.setPublicDate(document.select("span.post__time").text());
 
                 String rating = document.select("span.voting-wjt__counter").text();
+
                 if (rating.contains(" "))
                     article.setRating(rating.substring(0, rating.indexOf(" ")));
                 else
@@ -142,7 +149,8 @@ public class Parser {
 
                         String newLink = relative.attr("href");
                         if (newLink.matches("/post/(.*)") && !graph.containsKey(relative.text().hashCode())) {
-                            article.parentArticles.put(relative.text().hashCode(), relative.text()+ " hash: "+
+                            article.parentArticles.put(relative.text().hashCode(),"!son! "
+                                    + relative.text()+ "* hash: "+
                                     relative.text().hashCode() + " link: " +
                                     SOURCE + newLink);
                             if (!graph.containsKey(article.getArticleName().hashCode()))
@@ -151,11 +159,10 @@ public class Parser {
                                 System.out.println(newLink + " already exists --> " + "graph size: "
                                         + graph.size() + "/" + article_limit_count);
 
-                            Parser.tcount++;
-
                             System.out.println(newLink + " №" + Parser.tcount + " parsed --> " + "graph size: "
                                     + graph.size() + "/" + article_limit_count);
-                            parseThrough(newLink); //recursive call
+                            parentHref = SOURCE + postId;
+                            parseThrough(newLink,article.getArticleName(),parentHref); //recursive call
                         }else{
                             System.out.println(newLink + " dismissed --> " + "graph size: "
                                     + graph.size() + "/" + article_limit_count);
@@ -165,7 +172,7 @@ public class Parser {
 
                 graph.put(article.getArticleName().hashCode(),article);
 
-                Parser.tcount++; //increase static counter tcount
+                //Parser.tcount++; //increase static counter tcount
 
             } catch (IOException e) {
                 System.out.print("unreachable site or blocked article found...\n");

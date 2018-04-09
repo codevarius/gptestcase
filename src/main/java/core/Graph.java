@@ -23,8 +23,20 @@ public class Graph extends HashMap<Integer,Article> {
     public void sortIndividual(String tag, String artHash ){
         sortedResultList = new ArrayList<>();
         tg = tag;
-        search(Integer.valueOf(artHash).hashCode(), tag);
+        searchIndi(Integer.valueOf(artHash).hashCode());
     }
+
+    private void searchIndi(int artHash) {
+        for(Map.Entry<Integer, String> entry : this.get(artHash).parentArticles.entrySet()){
+            String value = entry.getValue();
+
+            if (this.get(value.substring(6,value.indexOf("*")).hashCode()) != null)
+                sortedResultList.add(this.get(value.substring(6,value.indexOf("*")).hashCode()));
+            else
+                System.out.println(value.substring(6,value.indexOf("*")) + " is not contained in the graph");
+        }
+    }
+
 
     public void sort(String tag){
         sortedResultList = new ArrayList<>();
@@ -39,27 +51,27 @@ public class Graph extends HashMap<Integer,Article> {
 
         if (this.containsKey(artHash)){
 
-            if (this.get(artHash).tags.containsKey(tag.hashCode())){
-                sortedResultList.add(this.get(artHash));
+            if (this.get(artHash).tags.containsKey(tag.hashCode()) && tag.hashCode() != 0){
 
-                //bug test info
-                //System.out.print("searching --> tag found --> list: ");
-                //System.out.println(sortedResultList);
+                if (!sortedResultList.contains(this.get(artHash))) {
+                    sortedResultList.add(this.get(artHash));
+                }
 
                 for(Map.Entry<Integer, String> entry : this.get(artHash).parentArticles.entrySet()){
                     Integer k = entry.getKey();
-                    if (this.containsKey(k))
-                        search(k,tag);
+                    String value = entry.getValue();
+
+                    //if (this.containsKey(k) && this.get(artHash).getArticleName().hashCode() == value.hashCode())
+                    search(k,tag);
                 }
             }else{
-                //bug test info
-                //System.out.print("searching --> tag not found --> list: ");
-                //System.out.println(sortedResultList);
 
                 for(Map.Entry<Integer, String> entry : this.get(artHash).parentArticles.entrySet()){
                     Integer k = entry.getKey();
-                    if (this.containsKey(k))
-                        search(k,tag);
+                    String value = entry.getValue();
+
+                    //if (this.containsKey(k) && this.get(artHash).getArticleName().hashCode() == value.hashCode())
+                    search(k,tag);
                 }
             }
 

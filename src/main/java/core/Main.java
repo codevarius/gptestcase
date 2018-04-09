@@ -68,7 +68,7 @@ public class Main {
         System.out.print("gptestcase launched --> type 'help' for info -->\n");
 
         //if graph command will be the first command user type in
-        graph = null;
+        graph = new Graph();
         m = new Main(null, null);
 
         while (!command.matches("quit")){
@@ -135,9 +135,9 @@ public class Main {
 
                 case INDI1:
                     if (!graph.isEmpty()){
-                        System.out.print("indi launch --> enter tag for search -->\n");
-                        String tag = scanner.nextLine();
-                        System.out.print("indi launch --> enter tag for search --> enter graph existing article hash\n");
+                        //System.out.print("indi launch --> enter tag for search -->\n");
+                        String tag = ""; //scanner.nextLine();
+                        System.out.print("indi launch --> enter graph existing article hash\n");
                         String artHash = scanner.nextLine();
                         graph.sortIndividual(tag,artHash);
                         graph.printSortList(1);
@@ -148,9 +148,9 @@ public class Main {
 
                 case INDI2:
                     if (!graph.isEmpty()){
-                        System.out.print("indi launch --> enter tag for search -->\n");
-                        String tag = scanner.nextLine();
-                        System.out.print("indi launch --> enter tag for search --> enter graph existing article hash\n");
+                        //System.out.print("indi launch --> enter tag for search -->\n");
+                        String tag = ""; //scanner.nextLine();
+                        System.out.print("indi launch --> enter graph existing article hash\n");
                         String artHash = scanner.nextLine();
                         graph.sortIndividual(tag,artHash);
                         graph.printSortList(2);
@@ -161,9 +161,9 @@ public class Main {
 
                 case INDI3:
                     if (!graph.isEmpty()){
-                        System.out.print("indi launch --> enter tag for search -->\n");
-                        String tag = scanner.nextLine();
-                        System.out.print("indi launch --> enter tag for search --> enter graph existing article hash\n");
+                        //System.out.print("indi launch --> enter tag for search -->\n");
+                        String tag = ""; //scanner.nextLine();
+                        System.out.print("indi launch --> enter graph existing article hash\n");
                         String artHash = scanner.nextLine();
                         graph.sortIndividual(tag,artHash);
                         graph.printSortList(3);
@@ -204,12 +204,12 @@ public class Main {
                         "'rep -b'  - shows list of all graph objects containing a tag and ranked by rating value\n" +
                         "'rep -c'  - shows list of all graph objects containing a tag and ranked by views value\n" +
                         "'rep -d'  - shows list of all graph objects containing a tag and ranked by saves value\n" +
-                        "'indi -a' - for individual object shows list of all related objects in graph " +
-                        "containing a tag and ranked by rating value\n" +
-                        "'indi -b' - for individual object shows list of all related objects in graph " +
-                        "containing a tag and ranked by views value\n" +
-                        "'indi -c' - for individual object shows list of all related objects in graph " +
-                        "containing a tag and ranked by saves value\n" +
+                        "'indi -a' - for individual object shows list of all relative and existing objects in range " +
+                        "of 1 level above and down and ranked by rating value\n" +
+                        "'indi -b' - for individual object shows list of all relative and existing objects in range " +
+                        "of 1 level above and down and ranked by views value\n" +
+                        "'indi -c' - for individual object shows list of all relative and existing objects in range " +
+                        "of 1 level above and down and ranked by saves value\n" +
                         "'help'    - displays help description\n" +
                         "'quit'    - closes program\n\n";
     }
@@ -219,7 +219,7 @@ public class Main {
         Loader function (connects to site & load graph with vertex objects
          */
         long start = System.currentTimeMillis(); //timer start
-        parser.parseThrough(startPostId);
+        parser.parseThrough(startPostId,"", "");
 
         //clean graph garbage
         graph.remove(0); //removing null default element from graph

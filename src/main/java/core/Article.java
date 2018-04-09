@@ -41,7 +41,7 @@ public class Article extends Vertex {
         output.append("relatives:{ \n                   ");
 
         for(Map.Entry<Integer, String> entry : this.parentArticles.entrySet()){
-            Integer key = entry.getKey();
+            //Integer key = entry.getKey();
             String value = entry.getValue();
 
             output.append(value + "\n                   ");
